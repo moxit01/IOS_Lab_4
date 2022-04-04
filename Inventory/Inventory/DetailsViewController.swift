@@ -14,10 +14,21 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var descField: UITextField!
     @IBOutlet weak var dateField: UIDatePicker!
     
+    var selectedIndex: Int?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        if let ind = selectedIndex
+        {
+            let item = ItemList.items[ind]
+            nameField.text = item.name
+            SKUField.text = item.SKU
+            descField.text = item.description
+            dateField.setDate(item.dateAdded, animated: false)
+        }
         
 
         
@@ -26,6 +37,15 @@ class DetailsViewController: UIViewController {
     
     
     @IBAction func save(_ sender: Any) {
+        guard let name = nameField.text, let sku = SKUField.text, let desc = descField.text else
+        {
+            return
+        }
+
+        
+        let item = Item(name: name, SKU: sku, description: desc, dateAdded: dateField.date)
+        ItemList.addItem(item: item)
+        self.navigationController?.popViewController(animated: true)
     }
     
     /*

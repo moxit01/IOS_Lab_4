@@ -7,10 +7,10 @@
 
 import Foundation
 
-class Item{
+class Item: Codable{
     var name: String
     var SKU: String
-    var description: String
+    var description: String 
     var dateAdded: Date
     
     init(name: String, SKU: String, description: String, dateAdded: Date){
