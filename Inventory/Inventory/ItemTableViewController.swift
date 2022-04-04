@@ -8,6 +8,9 @@
 import UIKit
 
 class ItemTableViewController: UITableViewController {
+    
+    var items = [Item]()
+    let itemList = ItemList()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,6 +26,7 @@ class ItemTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func viewWillAppear(_ animated: Bool) {
+        itemList.decodesave()
         super.viewWillAppear(animated)
         self.tableView.reloadData()
     }
@@ -34,7 +38,7 @@ class ItemTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return ItemList.items.count
+        return itemList.items.count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -42,9 +46,7 @@ class ItemTableViewController: UITableViewController {
 
         // Configure the cell...
         
-        var content = cell.defaultContentConfiguration()
-        content.text = ItemList.items[indexPath.row].name
-        cell.contentConfiguration = content
+        cell.textLabel?.text = itemList.items[indexPath.row].name
 
         return cell
     }
@@ -62,7 +64,7 @@ class ItemTableViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            ItemList.deleteItem(row: indexPath.row)
+            itemList.deleteItem(row: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .fade)
             
         } else if editingStyle == .insert {
@@ -71,12 +73,15 @@ class ItemTableViewController: UITableViewController {
     }
     
 
-    /*
+    
     // Override to support rearranging the table view.
     override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
+        
+        itemList.moveItem(from: fromIndexPath.row, to: to.row)
+        tableView.reloadData()
 
     }
-    */
+    
 
     
     // Override to support conditional rearranging of the table view.
@@ -90,6 +95,10 @@ class ItemTableViewController: UITableViewController {
 
     // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        let dst = segue.destination as! DetailsViewController
+        dst.itemList = itemList
+        dst.rowIndex = tableView.indexPathForSelectedRow?.row
         // Get the new view controller using segue.destination.
         // Pass the selected object to the new view controller.
         

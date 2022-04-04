@@ -7,62 +7,62 @@
 
 import Foundation
 
-let itemsKey = "ITEMS_LIST"
+
 
 class ItemList{
-   static var items = [Item]()
+    var items = [Item]()
     
-   static func addItem(item: Item){
+    func addItem(item: Item){
         // complete code
         
-        items.append(item)
-        ItemList.updateUserDefaults()
+       decodesave()
+       items.append(item)
+       encodesave()
          
     }
     
-   static func deleteItem(row: Int){
+    func deleteItem(row: Int){
         // complete code
-        items.remove(at: row)
-        ItemList.updateUserDefaults()
+       decodesave()
+      items.remove(at: row)
+      encodesave()
+
         
     }
     
-  static  func moveItem(from: Int, to: Int){
+  func moveItem(from: Int, to: Int){
         // complete code
         let itemFromMove = items[from]
         let itemToMove = items[to]
         items[from] = itemToMove
         items[to] = itemFromMove
+        encodesave()
         
     }
     
     
-    static private func updateUserDefaults()
-    {
-        do {
-            let encoder = JSONEncoder()
-            let data = try encoder.encode(items)
-
-            UserDefaults.standard.set(data, forKey: itemsKey)
-        } catch {
-            print("Unable to Encode Note (\(error))")
-        }
-        
-    }
-    
-    static func loadItemsFromUserDefaults()
-    {
-        if let data = UserDefaults.standard.data(forKey: itemsKey) {
-            do {
-                let decoder = JSONDecoder()
-                items = try decoder.decode([Item].self, from: data)
-            } catch {
-                print("Unable to Decode Note (\(error))")
-            }
-        }
-        
-    }
-    
+    func encodesave(){
+       do {
+           let encoder = JSONEncoder()
+           let encodeData = try encoder.encode(items)
+           UserDefaults.standard.set(encodeData, forKey: "item")
+       } catch {
+           print("error")
+       }
+   }
+   
+    func decodesave(){
+       do{
+           if let encodedata = UserDefaults.standard.object(forKey: "item") as? Data{
+               do {
+                   let decoder = JSONDecoder()
+                   items = try decoder.decode([Item].self, from: encodedata)
+               } catch {
+                   print("Unable to Decode Note (\(error))")
+               }
+           }
+       }
+   }
     
 
     

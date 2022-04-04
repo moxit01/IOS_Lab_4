@@ -8,44 +8,45 @@
 import UIKit
 
 class DetailsViewController: UIViewController {
+    
+    
+    var itemList: ItemList!
+    var items = [Item]()
+    var rowIndex: Int!
 
     @IBOutlet weak var nameField: UITextField!
     @IBOutlet weak var SKUField: UITextField!
     @IBOutlet weak var descField: UITextField!
     @IBOutlet weak var dateField: UIDatePicker!
     
-    var selectedIndex: Int?
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
         
-        if let ind = selectedIndex
-        {
-            let item = ItemList.items[ind]
-            nameField.text = item.name
-            SKUField.text = item.SKU
-            descField.text = item.description
-            dateField.setDate(item.dateAdded!, animated: false)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        if rowIndex != nil {
+            itemList.decodesave()
+            nameField.text = itemList.items[rowIndex].name
+            SKUField.text = itemList.items[rowIndex].SKU
+            descField.text = itemList.items[rowIndex].description
+            dateField.date = itemList.items[rowIndex].dateAdded
+            
         }
-        
-
-        
     }
     
     
     
     @IBAction func save(_ sender: Any) {
-        guard let name = nameField.text, let sku = SKUField.text, let desc = descField.text else
-        {
-            return
-        }
-
-        
-        let item = Item(name: name, SKU: sku, description: desc, dateAdded: dateField.date)
-        ItemList.addItem(item: item)
+       
+        if !nameField.text!.isEmpty && !SKUField.text!.isEmpty && !descField.text!.isEmpty {
+        let update = Item(name: nameField.text!, SKU: SKUField.text!, description: descField.text!, dateAdded: dateField.date)
+        itemList.addItem(item: update)
         self.navigationController?.popViewController(animated: true)
+        }
     }
     
     /*
