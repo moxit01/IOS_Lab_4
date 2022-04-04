@@ -27,7 +27,7 @@ class DetailsViewController: UIViewController {
             nameField.text = item.name
             SKUField.text = item.SKU
             descField.text = item.description
-            dateField.setDate(item.dateAdded, animated: false)
+            dateField.setDate(item.dateAdded!, animated: false)
         }
         
 
